@@ -39,21 +39,41 @@ TODO students: Run commands to create a directory tree, as described in previous
 │   ├── doubleLSTM.png
 │   ├── embedding.png
 │   ├── lstm_cell.png
+│   ├── seq2seq-inference.png
+│   ├── seq2seq-teacher-forcing.png
 │   ├── seq2seq.jpg
 │   ├── singleLSTM.png
 │   ├── tsne_female_male.png
 │   ├── xnor.png
 │   └── xor.png
+├── requirements.txt
 ├── task1-xor.ipynb
 ├── task2-rnn-applications.ipynb
 ├── task3-rnn-translation.ipynb
+├── text_data
+│   ├── eng_vocab.txt
+│   ├── nl_vocab.txt
+│   ├── nmt_eng.npy
+│   └── nmt_nl.npy
 ├── tweets_data
 │   ├── testTweets_preprocessed.json
 │   ├── trainTweets_preprocessed.json
 │   └── vocabulary.pkl
 └── utils
     ├── LSTM.py
-    └── dataset.py
+    ├── __pycache__
+    │   ├── LSTM.cpython-36.pyc
+    │   └── dataset.cpython-36.pyc
+    ├── dataset.py
+    └── translation
+        ├── __pycache__
+        │   ├── layers.cpython-36.pyc
+        │   ├── text_data.cpython-36.pyc
+        │   └── train_funcs.cpython-36.pyc
+        ├── layers.py
+        ├── text_data.py
+        └── train_funcs.py
 
-3 directories, 20 files
+7 directories, 36 files
 ```
+

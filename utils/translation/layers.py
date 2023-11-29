@@ -84,7 +84,9 @@ class Decoder(tf.keras.layers.Layer):
         # 3. A fully connected layer to project the output tokens from hidden_size to (target language) vocab_size
         #
         ##########################################################################
-        raise NotImplementedError
+        self.embedding = Embedding(vocab_size, hidden_size)
+        self.rnn = LSTM(hidden_size, return_sequences=True)  
+        self.fc = Dense(vocab_size)
         
         ##########################################################################
         # END TODO
@@ -120,7 +122,9 @@ class Decoder(tf.keras.layers.Layer):
         # 3. Feed through the fully connected layer.
         #
         ##########################################################################
-        raise NotImplementedError
+        x = self.embedding(x)
+        x = self.rnn(x, initial_state=encoder_state)  
+        logits = self.fc(x)
         
         ##########################################################################
         # END TODO
@@ -197,7 +201,9 @@ class TranslationModel(tf.keras.Model):
         # Encoder layer. Remember that the Encoder outputs #
         # a tuple (e_h, e_h, e_c)                          #
         ####################################################
-        raise NotImplementedError
+        encoder_output, encoder_h, encoder_c = self.encoder(nl_sequence)
+        encoder_state = (encoder_h, encoder_c)
+        
         
         ####################################################
         # END TODO                                         #
@@ -210,7 +216,7 @@ class TranslationModel(tf.keras.Model):
             # encoder states to the decoder. Save it to the    #
             # 'output' variable.                                #
             ####################################################
-            raise NotImplementedError
+            output = self.decoder(eng_sequence, encoder_state)
             
             ####################################################
             # END TODO                                         #
@@ -290,9 +296,9 @@ class BidirectionalEncoder(tf.keras.layers.Layer):
         # raise NotImplementedError
         # Create the bidirectional RNN layer (LSTM)
         # We also want the hidden/cell states of the LSTM to be returned, to feed into the decoder.
-        raise NotImplementedError
         
-        self.rnn = None # Fill out with a bidirectional LSTM
+        
+        self.rnn = Bidirectional(LSTM(hidden_size, return_state=True))
 
         ##########################################################################
         # END TODO
@@ -313,9 +319,9 @@ class BidirectionalEncoder(tf.keras.layers.Layer):
         '''
         
         x = self.embedding(x)
-        # x is a tuple of (encoder output, encoder final hidden state, encoder final cell state)
+      
         encoder_lstm_x, enc_state_h_fwd, enc_state_c_fwd, enc_state_h_bwd, enc_state_c_bwd  = self.rnn(x) 
-        # Combine the hidden state and cell state going both directions into a single hidden state and a single cell state
+        
         x = (encoder_lstm_x, enc_state_h_fwd + enc_state_h_bwd, enc_state_c_fwd + enc_state_c_bwd) 
 
         return x

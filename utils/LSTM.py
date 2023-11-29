@@ -65,7 +65,18 @@ class LSTMCell(tf.keras.Model):
         ###################################################
         # TODO: Specify the parameter shapes              #
         ###################################################
-        raise NotImplementedError
+        
+        input_dim = input_shape[-1]
+
+        # Defining the shapes for kernel, recurrent kernel, and biases
+        kernel_shape = (input_dim + self.units, 4 * self.units)
+        recurrent_shape = (self.units, 4 * self.units)  # Recurrent kernel shape
+        bias_shape = (4 * self.units,)
+
+        # Initialize the parameters 
+        self.kernel = self.add_weight(shape=kernel_shape, initializer=self.kernel_initializer, name='kernel')
+        self.recurrent_kernel = self.add_weight(shape=recurrent_shape, initializer=self.recurrent_initializer, name='recurrent_kernel')
+        self.bias = self.add_weight(shape=bias_shape, initializer=self.bias_initializer, name='bias')
         
         ###################################################
         # END TODO                                        #
@@ -115,7 +126,30 @@ class LSTMCell(tf.keras.Model):
         ###################################################
         # TODO: LSTMCell forward pass                     #
         ###################################################
-        raise NotImplementedError
+        
+        h_prev, c_prev = states
+
+        # Concatenating inputs and previous hidden states
+        combined = tf.concat([inputs, h_prev], axis=1)
+
+        # Computing the gate activations
+        gate_inputs = tf.matmul(combined, self.kernel) + self.bias
+
+        # Split gate inputs into four parts for different gates
+        i, f, c_bar, o = tf.split(gate_inputs, num_or_size_splits=4, axis=1)
+
+        # Applying the forget gate
+        f = tf.sigmoid(f)
+        c = f * c_prev
+
+        # Updating the cell state
+        i = tf.sigmoid(i)
+        c_bar = tf.tanh(c_bar)
+        c = c + i * c_bar  # Updated to use += operator for clarity
+
+        # Computing the new hidden state
+        o = tf.sigmoid(o)
+        h = o * tf.tanh(c)
         
         ###################################################
         # END TODO                                        #
@@ -144,7 +178,16 @@ class LSTMModel(tf.keras.Model):
         ###################################################
         # TODO: Add the RNN and other layers              #
         ###################################################
-        raise NotImplementedError
+        
+        
+        # Initializing the LSTMCell
+        self.lstm_cell = LSTMCell(units)
+
+        # RNN layer using the custom LSTMCell
+        self.rnn_layer = tf.keras.layers.RNN(self.lstm_cell, return_sequences=True, return_state=False)
+
+        # Output layer
+        self.dense = tf.keras.layers.Dense(output_dim, activation=activation)
 
         ###################################################
         # END TODO                                        #
@@ -164,7 +207,16 @@ class LSTMModel(tf.keras.Model):
         ###################################################
         # TODO: Feedforward through your model            #
         ###################################################
-        raise NotImplementedError
+        
+        
+        x = tf.cast(inputs, dtype=tf.float32)
+
+        # Forward pass through LSTM layer
+        x = self.rnn_layer(x)
+
+        # Forward pass through output Dense layer
+        x = self.dense(x)
+
 
         ###################################################
         # END TODO                                        #

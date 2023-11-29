@@ -19,8 +19,11 @@ def get_dataset(nl_text, eng_text):
     # TODO: Create the dataset object. Be careful of  #
     # the input language and target language.         #
     ###################################################
-    raise NotImplementedError
-    text_ds = None
+    
+    assert nl_text.shape[0] == eng_text.shape[0]
+
+    text_ds = tf.data.Dataset.from_tensor_slices((nl_text, eng_text))
+    
     ###################################################
     # END TODO                                        #
     ###################################################
@@ -66,13 +69,18 @@ def get_dataset_partitions_tf(
     # make sure they are exactly like above.
     # 
     #################################################################
-    raise NotImplementedError
+    
+    assert val_split <= 1.
+
     if shuffle:
-        #Shuffle dataset
-        #Remember to use the shuffle_size argument for buffering.
-        #You may want to set a seed for reproducibility, else the shuffle
-        #will result in different splits every time it is called.
-        pass
+        ds = ds.shuffle(shuffle_size, seed=12)  
+
+    # Calculate how many items go into the validation set
+    val_size = int(val_split * ds_size)
+
+    val_ds = ds.take(val_size)  
+    train_ds = ds.skip(val_size)
+        
     
     #################################################################
     # END TODO                                                      #
