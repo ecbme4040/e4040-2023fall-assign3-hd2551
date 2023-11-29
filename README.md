@@ -32,6 +32,10 @@ TODO students: Run commands to create a directory tree, as described in previous
 ./
 ├── Assignment3-intro.ipynb
 ├── README.md
+├── figures
+│   ├── hd2551_gcp_work_example_screenshot_1.png
+│   ├── hd2551_gcp_work_example_screenshot_2.png
+│   └── hd2551_gcp_work_example_screenshot_3.png
 ├── img
 │   ├── bptt.png
 │   ├── bptt2.jpg
@@ -74,6 +78,8 @@ TODO students: Run commands to create a directory tree, as described in previous
         ├── text_data.py
         └── train_funcs.py
 
-7 directories, 36 files
+8 directories, 39 files
+
+
 ```
 
